@@ -96,16 +96,30 @@ runs:
     - ${{ inputs.fail-on-all-errors }}
     - ${{ inputs.scan-mode }}
     - ${{ inputs.pipeline }}
-    
-        steps:
-      - name: Accurics
-        uses: accurics/accurics-action@v2.0.2
-        id: accurics
-        with:
-          app-id: ${{ secrets.ACCURICS_APP_ID }}
-          env-id: ${{ secrets.ACCURICS_ENV_ID }}
-          repo: "<URL of the repository>"
-
+          - name: Checkout
+        uses: actions/checkout@v2
+      - name: Accurics
+        uses: accurics/accurics-action@v2.0.2
+        id: accurics
+        env:
+          # Required by Terraform
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          REPO_URL: ${{ github.repositoryUrl }}
+          GIT_BRANCH:  ${{ github.ref_name }}
+          GIT_COMMIT:  ${{ github.sha }}
+        with:
+          # Required by Accurics
+          app-id: ${{ secrets.ACCURICS_APP_ID }}
+          env-id: ${{ secrets.ACCURICS_ENV_ID }}
+          repo: "https://bitbucket.org/myrepo/reponame.git"
+          # Optional args
+          plan-args: '-var myvar1=val1 -var myvar2=val2'
+          fail-on-violations: true
+          url: "https://cloud.tenable.com/cns"
+          scan-mode: "scan"
+          pipeline: true
+      - name: Display statistics
         run: '
             echo ""
             echo "Environment Name           : ${{ steps.accurics.outputs.env-name }}";
@@ -123,4 +137,5 @@ runs:
             echo "Drift                      : ${{ steps.accurics.outputs.drift }}";
             echo "IaC Drift                  : ${{ steps.accurics.outputs.iacdrift }}";
             echo "Cloud Drift                : ${{ steps.accurics.outputs.clouddrift }}";
-            echo "
+            echo ""
+          '
