@@ -97,3 +97,21 @@ runs:
     - ${{ inputs.scan-mode }}
     - ${{ inputs.pipeline }}
 
+        run: '
+            echo ""
+            echo "Environment Name           : ${{ steps.accurics.outputs.env-name }}";
+            echo "Repository                 : ${{ steps.accurics.outputs.repo }}";
+            echo "Violation Count            : ${{ steps.accurics.outputs.num-violations }}";
+            echo "Resource Count             : ${{ steps.accurics.outputs.num-resources }}";
+            echo ""
+            echo "Native Resources           : ${{ steps.accurics.outputs.native }}";
+            echo "Inherited Resources        : ${{ steps.accurics.outputs.inherited }}";
+            echo ""
+            echo "High-Severity Violations   : ${{ steps.accurics.outputs.high }}";
+            echo "Medium-Severity Violations : ${{ steps.accurics.outputs.medium }}";
+            echo "Low-Severity Violations    : ${{ steps.accurics.outputs.low }}";
+            echo ""
+            echo "Drift                      : ${{ steps.accurics.outputs.drift }}";
+            echo "IaC Drift                  : ${{ steps.accurics.outputs.iacdrift }}";
+            echo "Cloud Drift                : ${{ steps.accurics.outputs.clouddrift }}";
+            echo "
