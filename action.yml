@@ -96,6 +96,15 @@ runs:
     - ${{ inputs.fail-on-all-errors }}
     - ${{ inputs.scan-mode }}
     - ${{ inputs.pipeline }}
+    
+        steps:
+      - name: Accurics
+        uses: accurics/accurics-action@v2.0.2
+        id: accurics
+        with:
+          app-id: ${{ secrets.ACCURICS_APP_ID }}
+          env-id: ${{ secrets.ACCURICS_ENV_ID }}
+          repo: "<URL of the repository>"
 
         run: '
             echo ""
